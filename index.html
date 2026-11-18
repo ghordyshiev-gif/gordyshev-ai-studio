@@ -1,0 +1,382 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Gordyshev AI Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark screening room. Wide display type on the left edge, work shown in its native frame (9:16 stays 9:16), monospace slate labels as the recurring detail. */
+:root{
+  color-scheme:dark;
+  --ink:#0d0d14;
+  --panel:#16161f;
+  --line:#2b2b3a;
+  --paper:#f1eee8;
+  --mute:#9a98a8;
+  --lilac:#b9a4ff;
+  --peach:#ffb38a;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Golos Text","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --gap:clamp(56px,9vw,120px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font:400 17px/1.55 var(--body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--lilac);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.08}
+h2{font-size:clamp(26px,4.4vw,46px);font-weight:600}
+p{margin:0}
+.slate{font:500 12px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.lead{color:var(--mute);max-width:56ch}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--ink) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:20px;padding-block:14px}
+.logo{font:800 14px/1 var(--display);letter-spacing:.04em;text-decoration:none;margin-right:auto}
+.logo span{color:var(--lilac)}
+nav{display:flex;gap:22px}
+nav a{font-size:15px;text-decoration:none;color:var(--mute)}
+nav a:hover{color:var(--paper)}
+.btn{display:inline-block;font:600 15px/1 var(--body);padding:14px 22px;border-radius:999px;border:1px solid var(--lilac);background:var(--lilac);color:var(--ink);text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--paper);border-color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--paper);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--paper);background:transparent}
+.bar .btn{padding:11px 18px}
+@media(max-width:720px){nav{display:none}}
+
+/* hero */
+.hero{padding-block:clamp(32px,6vw,72px) 0;display:grid;gap:clamp(24px,4vw,44px)}
+h1{font-size:clamp(30px,5.4vw,68px);font-weight:800;letter-spacing:-.02em}
+.intro{display:grid;grid-template-columns:minmax(180px,280px) 1fr;gap:clamp(20px,4vw,52px);align-items:end}
+.intro>div{display:grid;gap:16px;min-width:0}
+.me{aspect-ratio:4/5}
+.who{font:600 clamp(18px,2.2vw,24px)/1.2 var(--display)}
+.who small{display:block;margin-top:8px;font:500 12px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--lilac)}
+.bio{font-size:18px;max-width:52ch}
+@media(max-width:700px){.intro{grid-template-columns:1fr;align-items:start}.me{width:150px}}
+h1 em{font-style:normal;color:var(--lilac)}
+.hero-row{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
+.hero-row .lead{font-size:19px;color:var(--paper)}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+
+/* placeholder frames */
+.frame{position:relative;overflow:hidden;border-radius:6px;background:var(--panel);max-width:100%;isolation:isolate}
+.frame::before{content:"";position:absolute;inset:-40%;z-index:-1;background:
+  radial-gradient(38% 42% at 30% 35%,color-mix(in srgb,var(--lilac) 55%,transparent),transparent 70%),
+  radial-gradient(34% 40% at 72% 68%,color-mix(in srgb,var(--peach) 45%,transparent),transparent 70%);
+  filter:blur(30px);animation:drift 18s ease-in-out infinite alternate}
+.frame.b::before{animation-duration:23s;animation-direction:alternate-reverse}
+@keyframes drift{to{transform:translate(8%,-6%) rotate(25deg) scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.frame::before{animation:none}html{scroll-behavior:auto}}
+.frame .tl,.frame .tr,.frame .bl{position:absolute;font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--paper)}
+.frame .tl{left:12px;top:12px}.frame .tr{right:12px;top:12px}.frame .bl{left:12px;bottom:12px;color:var(--mute)}
+.frame .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:16px;font:500 13px/1.5 var(--mono);color:var(--paper)}
+.reel{aspect-ratio:16/9}
+.frame video,.frame>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.frame.live::before{display:none}
+.frame.live .tl,.frame.live .tr{text-shadow:0 1px 6px #000}
+.snd{position:absolute;right:12px;bottom:12px;font:500 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--paper);background:color-mix(in srgb,var(--ink) 72%,transparent);border:1px solid var(--line);border-radius:999px;padding:10px 14px;cursor:pointer}
+.snd:hover{border-color:var(--paper)}
+.me>img{object-position:50% 20%}
+.rec{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--peach);margin-right:8px;vertical-align:1px}
+
+section{padding-block:var(--gap) 0}
+.head{display:grid;gap:14px;margin-bottom:clamp(24px,4vw,40px)}
+
+/* work */
+.work{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:900px){.work{grid-template-columns:repeat(2,1fr)}}
+.card{display:grid;gap:12px;align-content:start;min-width:0}
+.card .frame{aspect-ratio:9/16}
+.card h3{font-size:17px;font-weight:600}
+.card p{font-size:15px;color:var(--mute)}
+.tag{justify-self:start;font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border:1px solid var(--line);border-radius:4px;color:var(--peach)}
+
+/* compare */
+.compare{position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;background:var(--panel);--p:50%;max-width:100%}
+.compare svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.compare .old{filter:sepia(1) saturate(.55) contrast(.82) brightness(.85) blur(.6px);clip-path:inset(0 calc(100% - var(--p)) 0 0)}
+.compare .bar2{position:absolute;top:0;bottom:0;left:var(--p);width:2px;background:var(--paper);transform:translateX(-1px);pointer-events:none}
+.compare .knob{position:absolute;top:50%;left:var(--p);width:44px;height:44px;border-radius:50%;background:var(--paper);color:var(--ink);transform:translate(-50%,-50%);display:grid;place-items:center;font:600 16px/1 var(--mono);pointer-events:none}
+.compare input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+.compare input:focus-visible ~ .knob{outline:2px solid var(--lilac);outline-offset:3px}
+.compare .lab{position:absolute;top:12px;font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;background:color-mix(in srgb,var(--ink) 70%,transparent);padding:7px 9px;border-radius:4px;pointer-events:none}
+.compare .lab.l{left:12px}.compare .lab.r{right:12px}
+.note{margin-top:12px}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.steps li{padding:20px 16px 0 0;display:grid;gap:8px;align-content:start;min-width:0}
+.steps b{font:600 16px/1.2 var(--display)}
+.steps span{font-size:15px;color:var(--mute)}
+.steps i{font:500 12px/1 var(--mono);font-style:normal;color:var(--lilac);letter-spacing:.1em}
+@media(max-width:900px){.steps{grid-template-columns:1fr;border-top:0}.steps li{border-top:1px solid var(--line);padding:16px 0}}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(24px,5vw,64px);align-items:start}
+@media(max-width:800px){.about{grid-template-columns:1fr}}
+.about p+p{margin-top:14px}
+
+/* faq */
+details{border-top:1px solid var(--line);padding:18px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font:600 18px/1.3 var(--body);list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);color:var(--lilac)}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:var(--mute);max-width:62ch}
+
+/* brief */
+.brief{background:var(--panel);border-radius:10px;padding:clamp(20px,4vw,44px);display:grid;gap:26px}
+.brief form{display:grid;gap:22px}
+.q{display:grid;gap:10px;border:0;padding:0;margin:0;min-width:0}
+.q legend,.q label.t{font:500 12px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);padding:0;margin-bottom:10px}
+.q label.t{margin-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{cursor:pointer}
+.chips input{position:absolute;opacity:0}
+.chips span{display:block;padding:10px 14px;border:1px solid var(--line);border-radius:999px;font-size:15px}
+.chips input:checked+span{background:var(--lilac);border-color:var(--lilac);color:var(--ink)}
+.chips input:focus-visible+span{outline:2px solid var(--lilac);outline-offset:3px}
+.brief input[type=text],.brief textarea{width:100%;font:400 16px/1.4 var(--body);color:var(--paper);background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:13px 14px}
+.brief textarea{min-height:96px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+.out{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:22px}
+.out pre{margin:0;white-space:pre-wrap;word-break:break-word;font:400 14px/1.55 var(--mono);background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:14px;user-select:all}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+footer{margin-top:var(--gap);border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;padding-block:24px 32px}
+</style>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#top">GORDYSHEV <span>AI</span> STUDIO</a>
+    <nav aria-label="Разделы">
+      <a href="#work">Работы</a>
+      <a href="#process">Процесс</a>
+      <a href="#faq">Вопросы</a>
+    </nav>
+    <a class="btn" href="#brief">Обсудить проект</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="intro">
+      <div class="frame me live"><img src="me.jpg" alt="Александр Гордышев" width="960" height="1280"></div>
+      <div>
+        <p class="who">Александр Гордышев<small>AI-креатор · Белореченск, Краснодарский край</small></p>
+        <p class="bio">Полгода делаю видео с помощью нейросетей: рекламу для бизнеса, AI-персонажей для соцсетей и мультсериалы. Сам пишу сценарий, генерирую, монтирую и озвучиваю. Работаю с заказчиками из любого города.</p>
+        <h1>Снято <em>без&nbsp;камеры.</em><br>Придумано до&nbsp;генерации.</h1>
+      </div>
+    </div>
+    <div class="frame reel live">
+      <video id="reel" src="reel.mp4" poster="reel.jpg" autoplay muted loop playsinline preload="auto"></video>
+      <span class="tl"><span class="rec"></span>Шоурил</span>
+      <span class="tr" id="tc">00:00:00:00</span>
+      <button class="snd" type="button" data-for="reel">Включить звук</button>
+    </div>
+    <div class="hero-row">
+      <p class="lead">Сценарий и раскадровка появляются раньше первого кадра. Поэтому результат получается задуманным, а не случайным.</p>
+      <div class="cta">
+        <a class="btn" href="#brief">Обсудить проект</a>
+        <a class="btn ghost" href="#work">Смотреть работы</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="head">
+        <p class="slate">Работы</p>
+        <h2>Реклама, мультфильмы, Reels</h2>
+        <p class="lead">Концепты для брендов и свои проекты подписаны как есть.</p>
+      </div>
+      <div class="work">
+        <article class="card">
+          <div class="frame live">
+            <video id="w1" src="work-1.mp4" poster="work-1.jpg" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="tl">9:16</span>
+            <button class="snd" type="button" data-for="w1">Включить звук</button>
+          </div>
+          <span class="tag">Концепт</span>
+          <h3>Реклама для бизнеса</h3>
+          <p>Рекламный ролик для бренда сумок. 20 секунд.</p>
+        </article>
+        <article class="card">
+          <div class="frame live">
+            <video id="v2" src="work-2.mp4" poster="work-2.jpg" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="tl">9:16</span>
+            <button class="snd" type="button" data-for="v2">Включить звук</button>
+          </div>
+          <span class="tag">Концепт</span>
+          <h3>Fashion-реклама</h3>
+          <p>Atelier Élément, коллекция 01. Платья из бабочек, ртути, льда и дыма. 26 секунд.</p>
+        </article>
+        <article class="card">
+          <div class="frame live">
+            <video id="v3" src="work-3.mp4" poster="work-3.jpg" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="tl">9:16</span>
+            <button class="snd" type="button" data-for="v3">Включить звук</button>
+          </div>
+          <span class="tag">Свой проект</span>
+          <h3>Мультсериал</h3>
+        </article>
+        <article class="card">
+          <div class="frame live">
+            <video id="v4" src="work-4.mp4" poster="work-4.jpg" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="tl">9:16</span>
+            <button class="snd" type="button" data-for="v4">Включить звук</button>
+          </div>
+          <span class="tag">Концепт</span>
+          <h3>Reels для кофейни</h3>
+          <p>Кофейня «Зерно»: от зерна до латте-арта. 13 секунд.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="head">
+        <p class="slate">Процесс</p>
+        <h2>От брифа до готового файла</h2>
+      </div>
+      <ol class="steps">
+        <li><i>01</i><b>Бриф</b><span>Что продаём, кому и где ролик будет жить.</span></li>
+        <li><i>02</i><b>Сценарий</b><span>Идея, текст и раскадровка по секундам. Согласуем до генерации.</span></li>
+        <li><i>03</i><b>Генерация</b><span>Персонажи, кадры и движение. Герой остаётся одним и тем же от кадра к кадру.</span></li>
+        <li><i>04</i><b>Монтаж и звук</b><span>Склейка, голос, музыка, титры.</span></li>
+        <li><i>05</i><b>Сдача</b><span>Правки и файл в нужном формате: 9:16, 16:9 или оба.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about">
+      <div class="head" style="margin:0">
+        <p class="slate">О студии</p>
+        <h2>Один автор, полный цикл</h2>
+      </div>
+      <div>
+        <p>Gordyshev AI Studio делает видео с помощью нейросетей: от идеи и сценария до монтажа и звука. Без съёмочной группы, локаций и аренды техники.</p>
+        <p class="lead">Берусь за рекламу для бизнеса, веду собственных AI-персонажей и делаю мультсериал. Поэтому умею и продавать за пятнадцать секунд, и держать героя на протяжении многих серий.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="head">
+        <p class="slate">Вопросы</p>
+        <h2>Что спрашивают до старта</h2>
+      </div>
+      <details><summary>Сколько стоит ролик?</summary><p>Зависит от длины, количества сцен и персонажей. Точную цену называю после брифа, до начала работы.</p></details>
+      <details><summary>Сколько времени это занимает?</summary><p>Срок зависит от сложности. Называю его вместе с ценой и фиксирую до старта.</p></details>
+      <details><summary>Можно ли вносить правки?</summary><p>Да. Сценарий и раскадровку согласуем заранее, поэтому крупных переделок на финале обычно не бывает.</p></details>
+      <details><summary>Что нужно от меня?</summary><p>Рассказать о продукте и прислать то, что есть: фото товара, логотип, примеры роликов, которые нравятся.</p></details>
+    </div>
+  </section>
+
+  <section id="brief">
+    <div class="wrap">
+      <div class="brief">
+        <div class="head" style="margin:0">
+          <p class="slate">Бриф</p>
+          <h2>Расскажите о проекте</h2>
+          <p class="lead">Четыре коротких шага. В конце получится готовый текст, который останется скопировать и отправить.</p>
+        </div>
+        <form id="f">
+          <fieldset class="q">
+            <legend>1 · Что нужно</legend>
+            <div class="chips">
+              <label><input type="checkbox" name="need" value="Реклама для бизнеса" id="n1"><span>Реклама для бизнеса</span></label>
+              <label><input type="checkbox" name="need" value="AI-персонаж" id="n2"><span>AI-персонаж</span></label>
+              <label><input type="checkbox" name="need" value="Мультфильм" id="n3"><span>Мультфильм</span></label>
+              <label><input type="checkbox" name="need" value="Reels / Shorts" id="n4"><span>Reels / Shorts</span></label>
+              <label><input type="checkbox" name="need" value="Другое" id="n5"><span>Другое</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="q">
+            <legend>2 · Когда нужно</legend>
+            <div class="chips">
+              <label><input type="radio" name="when" value="На этой неделе" id="w1"><span>На этой неделе</span></label>
+              <label><input type="radio" name="when" value="В течение месяца" id="w2"><span>В течение месяца</span></label>
+              <label><input type="radio" name="when" value="Не срочно" id="w3"><span>Не срочно</span></label>
+            </div>
+          </fieldset>
+          <div class="q">
+            <label class="t" for="about-text">3 · Пара слов о задаче</label>
+            <textarea id="about-text" placeholder="Что рекламируем, для кого, где будет выходить"></textarea>
+          </div>
+          <div class="two">
+            <div class="q"><label class="t" for="name">4 · Имя или компания</label><input type="text" id="name" autocomplete="name"></div>
+            <div class="q"><label class="t" for="contact">Как с вами связаться</label><input type="text" id="contact" placeholder="Telegram, WhatsApp или телефон"></div>
+          </div>
+          <div class="row"><button class="btn" type="submit">Собрать бриф</button></div>
+        </form>
+        <div class="out" id="out" hidden>
+          <p class="slate">Ваш бриф</p>
+          <pre id="txt"></pre>
+          <div class="row">
+            <button class="btn" type="button" id="copy">Скопировать</button>
+            <span class="slate" id="copied" aria-live="polite"></span>
+          </div>
+          <p class="lead">Отправьте этот текст в личные сообщения. Контакт студии появится здесь.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="slate">Gordyshev AI Studio · 2026</span>
+    <span class="slate">Контакты и соцсети: добавим</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var tc=document.getElementById('tc'),t0=performance.now();
+  function pad(n){return String(n).padStart(2,'0')}
+  var reel=document.getElementById('reel');
+  reel.addEventListener('timeupdate',function(){
+    var s=reel.currentTime,f=Math.floor((s%1)*30);
+    tc.textContent='00:00:'+pad(Math.floor(s))+':'+pad(f);
+  });
+  var btns=[].slice.call(document.querySelectorAll('.snd'));
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      var v=document.getElementById(b.dataset.for),on=v.muted;
+      btns.forEach(function(o){document.getElementById(o.dataset.for).muted=true;o.textContent='Включить звук'});
+      if(on){v.muted=false;v.play();b.textContent='Выключить звук'}
+    });
+  });
+
+  var f=document.getElementById('f'),out=document.getElementById('out'),txt=document.getElementById('txt');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var need=[].map.call(f.querySelectorAll('[name=need]:checked'),function(i){return i.value}).join(', ')||'не указано';
+    var w=f.querySelector('[name=when]:checked');
+    txt.textContent='Бриф для Gordyshev AI Studio\n'+
+      'Что нужно: '+need+'\n'+
+      'Сроки: '+(w?w.value:'не указано')+'\n'+
+      'Задача: '+(document.getElementById('about-text').value.trim()||'не указано')+'\n'+
+      'Имя: '+(document.getElementById('name').value.trim()||'не указано')+'\n'+
+      'Контакт: '+(document.getElementById('contact').value.trim()||'не указано');
+    out.hidden=false;out.scrollIntoView({block:'nearest'});
+  });
+  document.getElementById('copy').addEventListener('click',function(){
+    var done=document.getElementById('copied');
+    function sel(){var g=getSelection(),n=document.createRange();n.selectNodeContents(txt);g.removeAllRanges();g.addRange(n);done.textContent='Текст выделен, скопируйте его'}
+    try{navigator.clipboard.writeText(txt.textContent).then(function(){done.textContent='Скопировано'},sel)}catch(_){sel()}
+  });
+})();
+</script>
+
+</body></html>
